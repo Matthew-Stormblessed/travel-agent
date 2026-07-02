@@ -11,11 +11,16 @@ const getWeatherTool = tool({
     forcastDays: z.string()
   }),
   async execute({ latitude, longitude, forcastDays }) {
-    const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&forcast_days=${forcastDays}`)
+    try {
+      const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m&forcast_days=${forcastDays}`)
 
-    const data = await response.json();
+      const data = await response.json();
 
-    return data;
+      return data;
+    }
+    catch (e) {
+      console.log("Error while getting weather \n" + e)
+    }
   },
 });
 
@@ -61,21 +66,25 @@ const getFlightsTool = tool({
     trip_end: z.string()
   }),
   async execute({ departure_id, arrival_id, trip_start, trip_end }) {
+    try {
 
+      const flightResponse = await getJson({
+        api_key: process.env.SERP_API_KEY,
+        engine: "google_flights",
+        hl: "en",
+        gl: "us",
+        departure_id: departure_id,
+        arrival_id: arrival_id,
+        outbound_date: trip_start,
+        return_date: trip_end,
+        currency: "USD"
+      })
 
-    const flightResponse = await getJson({
-      api_key: process.env.SERP_API_KEY,
-      engine: "google_flights",
-      hl: "en",
-      gl: "us",
-      departure_id: departure_id,
-      arrival_id: arrival_id,
-      outbound_date: trip_start,
-      return_date: trip_end,
-      currency: "USD"
-    })
-
-    return flightResponse
+      return flightResponse
+    }
+    catch (e) {
+      console.log("Error in getting flight \n" + e)
+    }
   },
 });
 
@@ -88,11 +97,16 @@ const agent = new Agent({
 });
 
 export async function POST(request) {
-  const req = await request.json()
+  try {
+    const req = await request.json()
 
-  const now = new Date(); 
+    const now = new Date();
 
-  const result = await run(agent, `Suggest what you would think is the best roundtrip flight from ${req.flyingFrom} to ${req.flyingTo} from ${req.startDate} to ${req.endDate} for ${req.numPeople} people and this price ${req.budget}. Also suggest a hotel in the area. This is the current date ${now}`);
+    const result = await run(agent, `Suggest what you would think is the best roundtrip flight from ${req.flyingFrom} to ${req.flyingTo} from ${req.startDate} to ${req.endDate} for ${req.numPeople} people and this price ${req.budget}. Also suggest a hotel in the area. This is the current date ${now}`);
 
-  return Response.json(result.finalOutput)
+    return Response.json(result.finalOutput)
+  }
+  catch (e) {
+    console.log(e)
+  }
 }

@@ -21,6 +21,7 @@ export default function Home() {
 
 
   async function GetTrip() {
+    try{
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/travelAssistant`, {
       method: "POST",
       headers: {
@@ -48,6 +49,10 @@ export default function Home() {
 
 
     setTripPlanned(true)
+  }
+  catch(e){
+    console.log(e)
+  }
   }
 
   return (

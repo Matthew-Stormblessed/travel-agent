@@ -21,7 +21,7 @@ export default function Home() {
 
 
   async function GetTrip() {
-    const response = await fetch("http://localhost:3000/api/travelAssistant", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/travelAssistant`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

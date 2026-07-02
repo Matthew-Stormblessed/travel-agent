@@ -109,6 +109,6 @@ export async function POST(request) {
   catch (e) {
     console.log(e);
 
-    return Response.json(e)
+    return Response.json({"error": e})
   }
 }

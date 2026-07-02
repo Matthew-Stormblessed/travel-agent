@@ -90,7 +90,7 @@ const agent = new Agent({
 export async function POST(request) {
   const req = await request.json()
 
-  const now = new Date(); // Creates a Date object
+  const now = new Date(); 
 
   const result = await run(agent, `Suggest what you would think is the best roundtrip flight from ${req.flyingFrom} to ${req.flyingTo} from ${req.startDate} to ${req.endDate} for ${req.numPeople} people and this price ${req.budget}. Also suggest a hotel in the area. This is the current date ${now}`);
 

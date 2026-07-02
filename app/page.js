@@ -38,6 +38,7 @@ export default function Home() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       const dataJSON = JSON.parse(data);
 
@@ -51,7 +52,7 @@ export default function Home() {
       setTripPlanned(true)
     }
     catch (e) {
-      console.log("Error: \n" + e + "\n" + data)
+      console.log("Error: \n" + e)
     }
   }
 

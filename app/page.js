@@ -36,9 +36,9 @@ export default function Home() {
           budget: budget
         })
       });
-
+      console.log(response)
       const data = await response.json();
-      console.log(data)
+      
 
       const dataJSON = JSON.parse(data);
 

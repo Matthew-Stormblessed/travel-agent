@@ -21,38 +21,38 @@ export default function Home() {
 
 
   async function GetTrip() {
-    try{
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/travelAssistant`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        numTravelers: numTravelers,
-        flyingFrom: flyingFrom,
-        flyingTo: flyingTo,
-        startDate: startDate,
-        endDate: endDate,
-        budget: budget
-      })
-    });
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/travelAssistant`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          numTravelers: numTravelers,
+          flyingFrom: flyingFrom,
+          flyingTo: flyingTo,
+          startDate: startDate,
+          endDate: endDate,
+          budget: budget
+        })
+      });
 
-    const data = await response.json();
+      const data = await response.json();
 
-    const dataJSON = JSON.parse(data);
+      const dataJSON = JSON.parse(data);
 
-    setWeatherSummery(dataJSON.weatherSummery)
-    setFlightSummery(dataJSON.flightSummery)
-    setFlightLink(dataJSON.flightLink)
-    setHotelSummery(dataJSON.hotelSummery)
-    setHotelLink(dataJSON.hotelLink)
+      setWeatherSummery(dataJSON.weatherSummery)
+      setFlightSummery(dataJSON.flightSummery)
+      setFlightLink(dataJSON.flightLink)
+      setHotelSummery(dataJSON.hotelSummery)
+      setHotelLink(dataJSON.hotelLink)
 
 
-    setTripPlanned(true)
-  }
-  catch(e){
-    console.log(e)
-  }
+      setTripPlanned(true)
+    }
+    catch (e) {
+      console.log("Error: \n" + e + "\n" + data)
+    }
   }
 
   return (
@@ -111,13 +111,13 @@ export default function Home() {
           <div className="bg-[#BBF7F7] h-fit max-w-[351px] rounded-3xl flex justify-center text-[16px] items-center drop-shadow-2xl text-wrap p-[20px]">{weatherSummery}</div>
           <h1 className="text-3xl font-bold mt-[35px]">Flights</h1>
           <div className="bg-[#BBF7F7] h-fit max-w-[351px] rounded-3xl justify-center text-[16px] items-center drop-shadow-2xl flex flex-col text-wrap p-[20px]">{flightSummery}
-            <a href={flightLink} target="_blank"  rel="noopener noreferrer" className="w-[324px] h-[47px] border-4 rounded-4xl flex flex-row p-2 text-[25px] font-bold flex items-center justify-center mt-[10px] bg-[#4BDCB0]">
+            <a href={flightLink} target="_blank" rel="noopener noreferrer" className="w-[324px] h-[47px] border-4 rounded-4xl flex flex-row p-2 text-[25px] font-bold flex items-center justify-center mt-[10px] bg-[#4BDCB0]">
               Book
             </a>
           </div>
           <h1 className="text-3xl font-bold mt-[34px]">Hotel</h1>
           <div className="bg-[#BBF7F7] h-fit max-w-[351px] rounded-3xl flex justify-center text-[16px] items-center drop-shadow-2xl flex flex-col text-wrap p-[20px]">{hotelSummery}
-             <a href={hotelLink} target="_blank"  rel="noopener noreferrer" className="w-[324px] h-[47px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold flex items-center justify-center mt-[10px] bg-[#4BDCB0]">
+            <a href={hotelLink} target="_blank" rel="noopener noreferrer" className="w-[324px] h-[47px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold flex items-center justify-center mt-[10px] bg-[#4BDCB0]">
               Book
             </a>
           </div>

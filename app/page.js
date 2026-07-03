@@ -25,7 +25,6 @@ export default function Home() {
   const regex = /(\d*)\/(\d*)\/(\d*)/
   const dateParts = currentDate.match(regex)
   const formattedDate = dateParts[3] + "-0" + dateParts[1] + "-0" + dateParts[2]
-  console.log(formattedDate)
 
 
   async function GetTrip() {

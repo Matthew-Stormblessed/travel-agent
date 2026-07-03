@@ -2,7 +2,9 @@
 'use client'
 import Image from "next/image";
 import Cat from "@/public/cat.png"
+import Plane from "@/public/plane.png"
 import { useState } from "react"
+import Swal from 'sweetalert2'
 
 export default function Home() {
   const [startScreen, setStartScreen] = useState(true)
@@ -18,10 +20,26 @@ export default function Home() {
   const [flightLink, setFlightLink] = useState("")
   const [hotelSummery, setHotelSummery] = useState("")
   const [hotelLink, setHotelLink] = useState("")
+  const [loading, setLoading] = useState(false)
+  const currentDate = new Date().toLocaleDateString()
+  const regex = /(\d*)\/(\d*)\/(\d*)/
+  const dateParts = currentDate.match(regex)
+  const formattedDate = dateParts[3] + "-0" + dateParts[1] + "-0" + dateParts[2]
+  console.log(formattedDate)
 
 
   async function GetTrip() {
     try {
+      if (flyingFrom === "" || flyingTo === "" || startDate === "" || endDate === "") {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Hey!\nWe need to know all this info! Make sure every field is filled out.',
+          icon: 'error',
+          confirmButtonText: 'Cool'
+        })
+        return;
+      }
+      setLoading(true)
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/travelAssistant`, {
         method: "POST",
         headers: {
@@ -35,10 +53,8 @@ export default function Home() {
           endDate: endDate,
           budget: budget
         })
-      });
-      console.log(response)
+      })
       const data = await response.json();
-      
 
       const dataJSON = JSON.parse(data);
 
@@ -50,6 +66,7 @@ export default function Home() {
 
 
       setTripPlanned(true)
+      setLoading(false)
     }
     catch (e) {
       console.log("Error: \n" + e)
@@ -68,7 +85,7 @@ export default function Home() {
         <>
           <h2 className="text-2xl font-bold mt-2">Number of travelers</h2>
           <div className="w-[324px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold">
-            <button onClick={() => setNumTravelers(prev => prev - 1)} className="bg-black text-white w-[38px] h-[38px] text-[35px] font-bold rounded-full flex items-center justify-center">-</button>
+            <button onClick={() => numTravelers > 1 ? setNumTravelers(prev => prev - 1) : ""} className="bg-black text-white w-[38px] h-[38px] text-[35px] font-bold rounded-full flex items-center justify-center">-</button>
             {numTravelers}
             <button onClick={() => setNumTravelers(prev => prev + 1)} className="bg-black text-white w-[38px] h-[38px] rounded-full text-[35px] font-bold flex items-center justify-center">+</button>
           </div>
@@ -82,20 +99,23 @@ export default function Home() {
           </div>
           <h2 className="text-2xl font-bold mt-[49px]">From date</h2>
           <div className="w-[324px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold">
-            <input type="date" onChange={e => setStartDate(e.target.value)} value={startDate} className="text-center w-full" />
+            <input type="date" min={formattedDate} onChange={e => setStartDate(e.target.value)} value={startDate} className="text-center w-full" />
           </div>
           <h2 className="text-2xl font-bold mt-2">To date</h2>
           <div className="w-[324px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold">
-            <input onChange={e => setEndDate(e.target.value)} value={endDate} type="date" className="text-center w-full" />
+            <input onChange={e => setEndDate(e.target.value)} value={endDate} type="date" min={startDate !== "" ? startDate : formattedDate} className="text-center w-full" />
           </div>
           <h2 className="text-2xl font-bold mt-[38px]">Budget</h2>
           <div className="w-[324px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold">
             $
             <input value={budget} onChange={e => setBudget(e.target.value)} type="number" className="text-center w-full" />
           </div>
-          <button onClick={GetTrip} className="w-[324px] border-4 rounded-4xl flex flex-row justify-between p-2 text-[25px] font-bold flex items-center justify-center mt-[17px] bg-[#4BDCB0]">
+          <div className="flex flex-row mr-23">
+          <Image className={`mr-2 ${loading ? 'animate-bounce' : ''}`} src={Plane} height={50} width={100} alt="cat" />
+          <button onClick={GetTrip} className="w-[324px] border-4 rounded-4xl flex-row p-2 text-[25px] font-bold flex items-center justify-center mt-[17px] bg-[#4BDCB0]">
             Plan my trip!
           </button>
+          </div>
         </>
       }
 

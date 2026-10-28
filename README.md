@@ -16,6 +16,17 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Rate limiting
+
+The travel-planning API allows 10 requests per client per 60 seconds by default. Configure these server-only environment variables when needed:
+
+```text
+TRAVEL_RATE_LIMIT=10
+TRAVEL_RATE_WINDOW_MS=60000
+```
+
+The limiter uses the client address supplied by the deployment proxy through `X-Forwarded-For` or `X-Real-IP`. In a multi-instance or serverless deployment, configure an edge/API-gateway rate limiter as the authoritative protection because this in-process limiter is local to one runtime instance.
+
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
